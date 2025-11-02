@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven_3.9.11'
-        jdk 'jdk-17'
+        maven 'Maven3'
+        jdk 'JDK17'
     }
 
     stages {
@@ -13,7 +13,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build with Maven') {
             steps {
                 bat 'mvn clean package -DskipTests'
             }
@@ -21,15 +21,17 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    bat 'docker build -t jenkin_cia_bhava_app .'
-                }
+                bat 'docker build -t jenkin_cia_bhava .'
             }
         }
 
-        stage('Run Container') {
+        stage('Run Docker Container') {
             steps {
-                bat 'docker run -d -p 8080:8080 jenkin_cia_bhava_app'
+                bat '''
+                docker stop jenkin_app || true
+                docker rm jenkin_app || true
+                docker run -d -p 8080:8080 --name jenkin_app jenkin_cia_bhava
+                '''
             }
         }
     }
