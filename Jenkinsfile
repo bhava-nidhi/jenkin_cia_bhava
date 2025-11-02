@@ -29,7 +29,7 @@ pipeline {
                 bat '''
                 docker stop jenkin_app || true
                 docker rm jenkin_app || true
-                docker run -d -p 8080:8080 --name jenkin_app jenkin_cia_bhava
+                docker run -d -p 8081:8080 --name jenkin_app jenkin_cia_bhava
                 '''
             }
         }
